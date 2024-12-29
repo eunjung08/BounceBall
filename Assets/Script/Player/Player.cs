@@ -12,9 +12,13 @@ public class Player : MonoBehaviour
     public float jumpPower;
     public Vector2 returnPosition = new Vector2(-3.75f,-0.2f);
 
+    public GameObject gameClearUI;
+
     private void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
+        gameClearUI.SetActive(false);
+        Time.timeScale = 1;
     }
     void FixedUpdate()
     {
@@ -31,26 +35,25 @@ public class Player : MonoBehaviour
         transform.position += dir * speed * Time.deltaTime;
 
         Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
-        if (pos.x > 1.25f || pos.x < 0.15 || pos.y > 1.2 || pos.y < 0) {Debug.Log("인식"); transform.position = returnPosition;}
+        if (pos.x > 1.25f || pos.x < 0.15 || pos.y > 1.2 || pos.y < 0) {transform.position = returnPosition;}
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            Debug.Log(collision.transform.name);
             rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
         }
 
         if (collision.gameObject.CompareTag("Goal"))
         {
-            Debug.Log(collision.transform.name);
             EndGame();
         }
     }
 
     private void EndGame()
     {
-        Debug.Log("Finsh");
+        gameClearUI.SetActive(true);
+        Time.timeScale = 0;
     }
 }
