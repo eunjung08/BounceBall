@@ -13,9 +13,11 @@ public class Player : MonoBehaviour
     public Vector2 returnPosition = new Vector2(-3.75f,-0.2f);
 
     public GameObject gameClearUI;
+    private DataManager dataManager;
 
     private void Start()
     {
+        //dataManager = GameObject.FindGameObjectWithTag("Data").GetComponent<DataManager>();
         rigid = GetComponent<Rigidbody2D>();
         gameClearUI.SetActive(false);
         Time.timeScale = 1;
@@ -23,7 +25,6 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         Move();
-        rigid.freezeRotation=true;
     }
 
     private void Move()
@@ -44,8 +45,7 @@ public class Player : MonoBehaviour
         {
             rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
         }
-
-        if (collision.gameObject.CompareTag("Goal"))
+        else if (collision.gameObject.CompareTag("Goal"))
         {
             EndGame();
         }

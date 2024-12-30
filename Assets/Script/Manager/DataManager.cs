@@ -10,8 +10,8 @@ using UnityEngine.SceneManagement;
 public class DataManager : MonoBehaviour
 {
     private static DataManager instance;
-    public LevelData level = new LevelData();
     public int currentlevel;
+    public int maxlevel;
 
     private void Awake()
     {
@@ -24,7 +24,13 @@ public class DataManager : MonoBehaviour
         {
             Destroy(gameObject);    
         }
-        LoadLevel();
+    }
+    public void Clear()
+    {
+        if (currentlevel > maxlevel)
+        {
+            maxlevel = currentlevel;
+        }
     }
 
     public void LastLevel()
@@ -38,30 +44,6 @@ public class DataManager : MonoBehaviour
             Debug.Log("미개발");
         }
     }
-    private void LoadLevel()
-    {
-        try
-        {
-            string path = Path.Combine(Application.dataPath, "LevelData.json");
-            string jsonData = File.ReadAllText(path);
-            level = JsonUtility.FromJson<LevelData>(jsonData);
-        }
-        catch
-        {
-
-        }
-    }
-
-    public void UpdateLevel()
-    {
-        level.levels.Add(new PlayerData(currentlevel));
-        level.levels = level.levels.OrderByDescending(_ => _.level).ToList();
-        
-        string path = Path.Combine(Application.dataPath, "LevelData.json");
-        string jsonData = JsonUtility.ToJson(level);
-        File.WriteAllText(path, jsonData);
-    }
-
     public static DataManager Instance
     {
         get
